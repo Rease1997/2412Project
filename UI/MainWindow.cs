@@ -573,7 +573,7 @@ namespace HotFix
 
         private void OpenMap()
         {
-            UIManager.instance.PopUpWnd(FilesName.MAPPANEL, true, false);
+            UIManager.instance.PopUpWnd(FilesName.MAPPANEL);
         }
 
         public override void OnUpdate()

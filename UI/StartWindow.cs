@@ -29,8 +29,10 @@ namespace HotFix
             setText = setTextData;
             AddButtonClickListener(startGame, () =>
             {
-                Debug.Log(RFrameWork.instance.token);
-                WebRequestManager.instance.AsyncLoadUnityWebRequest(WebRequestUtils.checkUserUrl, WebRequestFuncitons.CheckHorseNum, true, "{}", RFrameWork.instance.token);
+                UIManager.instance.PopUpWnd(FilesName.SELECTPLAYERPANEL);
+                UIManager.instance.CloseWnd(this);
+                // Debug.Log(RFrameWork.instance.token);
+                // WebRequestManager.instance.AsyncLoadUnityWebRequest(WebRequestUtils.checkUserUrl, WebRequestFuncitons.CheckHorseNum, true, "{}", RFrameWork.instance.token);
                 startGame.interactable = false;
                 text.text = "------开始加载------";
             });

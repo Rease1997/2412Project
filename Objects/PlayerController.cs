@@ -85,6 +85,9 @@ namespace HotFix
         private bool openDoor = false;
         public TextMesh name;
         public string sex;
+        private Transform saimachang;
+        private Transform fanyuchang;
+        private Transform siyangchang;
         public void SetSex(string roleType)
         {
             if (sex == roleType)
@@ -114,7 +117,7 @@ namespace HotFix
         public override void Awake(object param1 = null, object param2 = null, object param3 = null)
         {
             name = m_Transform.Find("Name").GetComponent<TextMesh>();
-            name.text = UserInfoManager.userName.Length > 5 ? UserInfoManager.userName.Substring(0, 5) + "..." : UserInfoManager.userName;
+            name.text = "Rease";
             name.gameObject.SetActive(true);
             name.color = Color.green;
             moveAction = Move;
@@ -132,7 +135,57 @@ namespace HotFix
             triggerEvent.TriggerEnter = SetTriggerEnter;
             triggerEvent.TriggerExit = SetHorseExit;
             UserInfoManager.camera.GetComponent<Animator>().enabled = false;
+            AddAllEventListener();
+            siyangchang = UserInfoManager.transferPoint.Find("siyangchang");
+            fanyuchang = UserInfoManager.transferPoint.Find("fanzhichang");
+            saimachang = UserInfoManager.transferPoint.Find("saimachang");
+        }
 
+        void AddAllEventListener()
+        {
+            MessageCenter.instance.AddListener(MessageCenterEventID.PlayerChangePosition,PlayerChangePosition);
+        }
+
+        void PlayerChangePosition(Notification notification)
+        {
+            int type = (int)notification.content[0];
+            UserInfoManager.cmCamera.gameObject.SetActive(false);
+            playerCtl.enabled = false;
+            switch (type)
+            {
+                case 1://饲养场
+                    Debug.Log("去饲养场");
+                    UserInfoManager.camera.transform.rotation = Quaternion.Euler(new Vector3(2, 176, 0));
+                    UserInfoManager.camera.transform.position = new Vector3(483, 11, 534);
+                    UserInfoManager.cmCamera.transform.rotation = Quaternion.Euler(new Vector3(2, 176, 0));
+                    UserInfoManager.cmCamera.transform.position = new Vector3(483, 11, 534);
+                    m_Transform.position = siyangchang.position;
+                    m_Transform.rotation = siyangchang.rotation;
+                    break;
+                case 2://赛马场
+                    Debug.Log("去赛马场");
+                    UserInfoManager.cmCamera.transform.rotation = Quaternion.Euler(new Vector3(6, -103, 0));
+                    UserInfoManager.cmCamera.transform.position = new Vector3(666, 1.6f, 184);
+                    UserInfoManager.camera.transform.rotation = Quaternion.Euler(new Vector3(6, -103, 0));
+                    UserInfoManager.camera.transform.position = new Vector3(666, 1.6f, 184);
+                    m_Transform.position = saimachang.position;
+                    m_Transform.rotation = saimachang.rotation;
+                    break;
+                case 3://繁育场
+                    Debug.Log("去繁育场");
+                    UserInfoManager.cmCamera.transform.rotation = Quaternion.Euler(new Vector3(5, 178, 0));
+                    UserInfoManager.cmCamera.transform.position = new Vector3(646, 1.4f, 890);
+                    UserInfoManager.camera.transform.rotation = Quaternion.Euler(new Vector3(5, 178, 0));
+                    UserInfoManager.camera.transform.position = new Vector3(646, 1.4f, 890);
+                    m_Transform.position = fanyuchang.position;
+                    m_Transform.rotation = fanyuchang.rotation;
+                    break;
+                default:
+                    break;
+            }
+            UserInfoManager.cmCamera.gameObject.SetActive(true);
+            playerCtl.enabled = true;
+            UIManager.instance.CloseWnd(FilesName.MAPPANEL);
         }
 
         private void PlayerGoToPos(string name)
